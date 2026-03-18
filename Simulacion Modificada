@@ -1,0 +1,74 @@
+import random
+import matplotlib.pyplot as plt
+
+random.seed(42)
+
+
+def cumples(k):
+    return [random.randint(1, 365) for _ in range(k)]
+
+
+def hay_coincidencia(lista_cumples):
+    return len(lista_cumples) != len(set(lista_cumples))
+
+
+def proporcion_coincidencia(k, N):
+  
+    coincidencias = 0
+
+    for _ in range(N):
+        lista = cumples(k)
+        if hay_coincidencia(lista):
+            coincidencias += 1
+
+    return coincidencias / N
+
+
+def programa():
+    N = 1000
+    rango_k = range(1, 51)
+
+    probabilidades = []
+
+    for k in rango_k:
+        prob = proporcion_coincidencia(k, N)
+        probabilidades.append(prob)
+        print(f"k = {k:2d} → Probabilidad ≈ {prob:.4f}")
+
+    print("\nListo, generando gráfico...")
+
+ 
+    plt.figure(figsize=(10, 6))
+
+   
+    plt.plot(rango_k, probabilidades, 'o-', label='Simulación (N=1000)')
+
+   
+    probabilidades_suave = [proporcion_coincidencia(k, 10000) for k in rango_k]
+    plt.plot(rango_k, probabilidades_suave, '-', label='Simulación (N=10000)')
+
+   
+    plt.axhline(y=0.5, linestyle='--', label='50%')
+    plt.axvline(x=23, linestyle='--', label='k = 23')
+
+    # Punto destacado
+    plt.scatter(23, probabilidades[22])
+    plt.text(23, probabilidades[22], "  k=23")
+
+    # Títulos 
+    plt.title("Problema del cumpleaños (simulación)")
+    plt.xlabel("Cantidad de personas (k)")
+    plt.ylabel("Probabilidad de coincidencia")
+
+    plt.ylim(0, 1)
+    plt.xlim(1, 50)
+
+    plt.grid(True)
+    plt.legend()
+
+    plt.show()
+
+
+# Ejecutar programa
+if __name__ == "__main__":
+    programa()
